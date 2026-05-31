@@ -20,6 +20,7 @@ app.use("/api/auth", require("./modules/auth/auth.routes"));
 app.use("/api/profile", require("./modules/profile/profile.routes"));
 app.use("/api/conversations", require("./modules/messages/messages.routes"));
 app.use("/api/feed", require("./modules/feed/feed.routes"));
+app.use("/api/network", require("./modules/network/network.routes"));
 
 // Socket.io
 require("./socket/socket.handler")(io);
