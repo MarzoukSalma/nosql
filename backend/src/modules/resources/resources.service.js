@@ -3,9 +3,13 @@ const neo4j = require('neo4j-driver');
 const { neogma } = require('../../config/neo4j');
 
 // ─── Publier une ressource ────────────────────────────────────────
-const createResource = async (userId, { titre, description, type, fileUrl, departement, tags = [] }) => {
+const createResource = async (userId, body, file) => {
+  if (!file && !body.fileUrl) throw new Error('Un fichier ou un lien est requis');
+
   const id = uuid();
   const createdAt = new Date().toISOString();
+  const fileUrl = file ? `/uploads/resources/${file.filename}` : body.fileUrl;
+  const tags = body.tags ? JSON.parse(body.tags) : []; // FormData envoie tout en string
 
   const result = await neogma.queryRunner.run(
     `MATCH (e:Etudiant {id: $userId})
@@ -24,10 +28,12 @@ const createResource = async (userId, { titre, description, type, fileUrl, depar
      CREATE (e)-[:A_PUBLIE]->(r)
      RETURN r { .*, auteur: e { .id, .nom, .prenom, .avatar } } AS resource`,
     {
-      userId, id, titre,
-      description: description ?? null,
-      type, fileUrl: fileUrl ?? null,
-      departement: departement ?? null,
+      userId, id,
+      titre: body.titre,
+      description: body.description ?? null,
+      type: body.type,
+      fileUrl,
+      departement: body.departement ?? null,
       tags: JSON.stringify(tags),
       createdAt,
     }

@@ -3,20 +3,39 @@ const neo4j = require('neo4j-driver');
 const { neogma } = require('../../config/neo4j.js');
 
 // ─── Créer un post ────────────────────────────────────────────────
-const createPost = async (authorId, { contenu, type = 'texte', mediaUrl }) => {
+const createPost = async (userId, body, file) => {
   const id = uuid();
   const createdAt = new Date().toISOString();
 
-  // On crée le nœud et la relation [:A_PUBLIE] en une seule requête
+  // Si un fichier est uploadé, on construit son URL locale
+  const mediaUrl = file ? `/uploads/feed/${file.filename}` : (body.mediaUrl ?? null);
+
+  // Détecter le type automatiquement selon le fichier
+  let type = body.type ?? 'texte';
+  if (file) {
+    type = file.mimetype.startsWith('image/') ? 'image' : 'fichier';
+  }
+
   await neogma.queryRunner.run(
-    `MATCH (e:Etudiant {id: $authorId})
-     CREATE (p:Publication {id: $id, contenu: $contenu, type: $type, mediaUrl: $mediaUrl, likes: 0, createdAt: $createdAt})
+    `MATCH (e:Etudiant {id: $userId})
+     CREATE (p:Publication {
+       id: $id,
+       contenu: $contenu,
+       type: $type,
+       mediaUrl: $mediaUrl,
+       likes: 0,
+       createdAt: $createdAt
+     })
      CREATE (e)-[:A_PUBLIE]->(p)
      RETURN p`,
-    { authorId, id, contenu, type, mediaUrl: mediaUrl ?? null, createdAt }
+    {
+      userId, id,
+      contenu: body.contenu,
+      type, mediaUrl, createdAt,
+    }
   );
 
-  return { id, contenu, type, mediaUrl, likes: 0, createdAt };
+  return { id, contenu: body.contenu, type, mediaUrl, likes: 0, createdAt };
 };
 
 // ─── Feed personnalisé (posts des connexions + soi-même) ──────────

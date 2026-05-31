@@ -4,6 +4,7 @@ const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const { connectDB } = require("./config/neo4j");
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -14,6 +15,8 @@ const io = new Server(server, {
 // Middlewares
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
 
 // Routes
 app.use("/api/auth", require("./modules/auth/auth.routes"));

@@ -2,7 +2,7 @@ const FeedService = require('./feed.service.js');
 
 const createPost = async (req, res) => {
   try {
-    const post = await FeedService.createPost(req.userId, req.body);
+    const post = await FeedService.createPost(req.userId, req.body, req.file);
     res.status(201).json({ success: true, data: post });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });

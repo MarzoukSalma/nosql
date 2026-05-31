@@ -2,7 +2,7 @@ const ResourcesService = require('./resources.service');
 
 const createResource = async (req, res) => {
   try {
-    const resource = await ResourcesService.createResource(req.userId, req.body);
+    const resource = await ResourcesService.createResource(req.userId, req.body, req.file);
     res.status(201).json({ success: true, data: resource });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
