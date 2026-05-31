@@ -22,7 +22,7 @@ export default function Login() {
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("userId", res.data.etudiant.id);
       localStorage.setItem("user", JSON.stringify(res.data.etudiant));
-      navigate("/messages");
+      navigate("/feed");
     } catch (err) {
       setError(err.response?.data?.message || "Erreur de connexion");
     } finally {
