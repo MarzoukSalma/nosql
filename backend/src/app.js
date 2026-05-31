@@ -21,6 +21,7 @@ app.use("/api/profile", require("./modules/profile/profile.routes"));
 app.use("/api/conversations", require("./modules/messages/messages.routes"));
 app.use("/api/feed", require("./modules/feed/feed.routes"));
 app.use("/api/network", require("./modules/network/network.routes"));
+app.use("/api/resources", require("./modules/resources/resources.routes"));
 
 // Socket.io
 require("./socket/socket.handler")(io);
@@ -29,7 +30,7 @@ require("./socket/socket.handler")(io);
 const PORT = process.env.PORT || 5000;
 connectDB().then(() => {
   server.listen(PORT, () => {
-    console.log(`🚀 Serveur lancé sur http://localhost:${PORT}`);
+    console.log(`Serveur lancé sur http://localhost:${PORT}`);
   });
 });
 
