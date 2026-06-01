@@ -17,7 +17,7 @@ export default function Sidebar() {
     <aside className="w-60 h-full bg-white border-r border-slate-200 flex flex-col py-6 px-4 shrink-0">
       {/* App name */}
       <div className="mb-10 px-2">
-        <span className="font-bold text-xl text-[#0d1b2a]">ScholarGraph</span>
+        <span className="font-bold text-xl text-[#0d1b2a]">Cursus</span>
       </div>
 
       {/* Nav */}
